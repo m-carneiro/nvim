@@ -115,12 +115,6 @@ require("lazy").setup({
     config = function() require("Comment").setup() end
   },
 
-  -- Autopairs
-  {
-    "windwp/nvim-autopairs",
-    config = function() require("nvim-autopairs").setup() end
-  },
-
   -- Terminal embutido
   { "akinsho/toggleterm.nvim", version = "*",                                   config = true },
 
@@ -178,10 +172,20 @@ require("lazy").setup({
       end)
 
       cmp.setup({
+
+        preselect = cmp.PreselectMode.None,
+        completion = { completeopt = "menu,menuone,noinsert,noselect" },
         snippet = { expand = function(args) luasnip.lsp_expand(args.body) end },
         mapping = cmp.mapping.preset.insert({
           ["<C-Space>"] = cmp.mapping.complete(),
-          ["<CR>"] = cmp.mapping.confirm({ select = true }),
+          ["<C-e>"] = cmp.mapping.abort(),
+          ["<CR>"] = cmp.mapping(function(fallback)
+            if cmp.visible() and cmp.get_selected_entry() then
+              cmp.confirm({ select = false })
+            else
+              fallback()
+            end
+          end, { "i", "s" }),
           ["<Tab>"] = cmp.mapping(function(fallback)
             if cmp.visible() then
               cmp.select_next_item()
@@ -239,5 +243,9 @@ require("mason-lspconfig").setup({
   ensure_installed = { "lua_ls", "ts_ls", "gopls", "pyright", "jsonls", "yamlls" },
   automatic_installation = true,
 })
+
+require("nvim-autopairs").setup({ map_cr = false })
+local cmp_autopairs = require("nvim-autopairs.completion.cmp")
+require("cmp").event:on("confirm_done", cmp_autopairs.on_confirm_done())
 
 vim.schedule(function() require("lsp") end)
