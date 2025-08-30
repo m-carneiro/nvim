@@ -1,7 +1,27 @@
 local map = vim.keymap.set
 local opts = { noremap = true, silent = true }
+local Terminal = require("toggleterm.terminal").Terminal
+local lazygit = Terminal:new({ cmd = "lazygit", hidden = true, direction = "float", float_opts = { border = "curved" } })
 
 vim.g.mapleader = " "
+
+map("n", "<leader>gg", function()
+  local ok, term = pcall(require, "toggleterm.terminal")
+  if not ok then
+    vim.notify("toggleterm não carregado; abrindo :terminal lazygit", vim.log.levels.WARN)
+    vim.cmd("botright 15split | term lazygit")
+    return
+  end
+
+  if not _G.__LG then
+    _G.__LG = Terminal:new({
+      cmd = "lazygit",
+      direction = "float",
+      hidden = true,
+    })
+  end
+  _G.__LG:toggle()
+end, opts)
 
 map("n", "<leader>w", "<cmd>w<CR>", opts)
 map("n", "<leader>q", "<cmd>q<CR>", opts)

@@ -1,4 +1,5 @@
 require("config.options")
+require("plugins.lazy")
 require("config.keymaps")
 require("config.autocmds")
-require("plugins.lazy")
+pcall(function() require("lsp") end)
