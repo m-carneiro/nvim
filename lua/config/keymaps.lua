@@ -29,5 +29,11 @@ map({ "n", "v" }, "<leader>f", function()
   require("conform").format({ lsp_fallback = true, async = false })
 end, opts)
 
+map("n", "<leader>ce", "<cmd>Copilot enable<CR>", { desc = "Copilot: enable", silent = true })
+map("n", "<leader>cd", "<cmd>Copilot disable<CR>", { desc = "Copilot: disable", silent = true })
 
 map("n", "<leader>tt", ":ToggleTerm<CR>", otps)
+
+map("n", "<leader>xx", "<cmd>TroubleToggle<CR>", opts)
+map("n", "<leader>xt", "<cmd>TodoTrouble<CR>", opts)
+map("n", "<leader>tp", "<cmd>Telescope projects<CR>", opts)
