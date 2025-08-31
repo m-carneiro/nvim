@@ -58,6 +58,18 @@ require("lazy").setup({
     config = function() require("gitsigns").setup() end
   },
 
+  {
+    "windwp/nvim-autopairs",
+    event = "InsertEnter",
+    config = function()
+      require("nvim-autopairs").setup({ map_cr = false })
+      local ok, cmp = pcall(require, "cmp")
+      if ok then
+        local cmp_autopairs = require("nvim-autopairs.completion.cmp")
+        cmp.event:on("confirm_done", cmp_autopairs.on_confirm_done())
+      end
+    end,
+  },
   -- Copilot
   {
     "zbirenbaum/copilot.lua",
@@ -149,6 +161,7 @@ require("lazy").setup({
       "hrsh7th/cmp-buffer",
       "hrsh7th/cmp-path",
       "rafamadriz/friendly-snippets",
+      "windwp/nvim-autopairs",
     },
     config = function()
       local cmp = require("cmp")
@@ -197,7 +210,7 @@ require("lazy").setup({
           end, { "i", "s" }),
           ["<S-Tab>"] = cmp.mapping(function(fallback)
             if cmp.visible() then
-              cmp.select_prev_item()
+             cmp.select_prev_item()
             elseif luasnip.jumpable(-1) then
               luasnip.jump(-1)
             else
@@ -243,9 +256,5 @@ require("mason-lspconfig").setup({
   ensure_installed = { "lua_ls", "ts_ls", "gopls", "pyright", "jsonls", "yamlls" },
   automatic_installation = true,
 })
-
-require("nvim-autopairs").setup({ map_cr = false })
-local cmp_autopairs = require("nvim-autopairs.completion.cmp")
-require("cmp").event:on("confirm_done", cmp_autopairs.on_confirm_done())
 
 vim.schedule(function() require("lsp") end)
