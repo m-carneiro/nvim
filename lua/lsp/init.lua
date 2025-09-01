@@ -8,11 +8,22 @@ local on_attach = function(_, bufnr)
       silent = true
     })
   end
+
   map("n", "gd", vim.lsp.buf.definition)
   map("n", "gr", vim.lsp.buf.references)
   map("n", "K", vim.lsp.buf.hover)
   map("n", "<leader>rn", vim.lsp.buf.rename)
   map("n", "<leader>ca", vim.lsp.buf.code_action)
+
+  map("n", "<leader>ai", function()
+    vim.lsp.buf.code_action({ context = { only = { "source.addMissingImports.ts" } }, apply = true })
+  end
+  )
+
+  map("n", "<leader>oi", function()
+    vim.lsp.buf.code_action({ context = { only = { "source.organizeImports.ts" } }, apply = true })
+  end
+  )
 end
 
 local root = lspconfig.util.root_pattern("tsconfig.json", "package.json", ".git")
@@ -43,19 +54,17 @@ lspconfig.ts_ls.setup({
         includeModuleSpecifierPreference = "non-relative",
       },
     },
-    javascript = {
+    javacript = {
       format = { enable = false },
-      inlayHints = { includeInlayParameterNameHints = "all" },
+      inlayHints = { includeInlayFunctionParameterNameHints = "all" },
       preferences = {
-        importModuleSpecifier = "non-relative",
         includeCompletionsForModuleExports = true,
         includeCompletionsForImportStatements = true,
         quoteStyle = "single",
-      },
+      }
     },
-  }
+  },
 })
-
 
 for _, server in ipairs({ "lua_ls", "ts_ls", "gopls", "pyright", "jsonls", "yamlls" }) do
   lspconfig[server].setup({ on_attach = on_attach, capabilities = cmp_caps })
