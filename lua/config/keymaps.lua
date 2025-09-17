@@ -1,25 +1,24 @@
 local map = vim.keymap.set
 local opts = { noremap = true, silent = true }
-local Terminal = require("toggleterm.terminal").Terminal
-local lazygit = Terminal:new({ cmd = "lazygit", hidden = true, direction = "float", float_opts = { border = "curved" } })
 
 vim.g.mapleader = " "
 
 map("n", "<leader>gg", function()
-  local ok, term = pcall(require, "toggleterm.terminal")
-  if not ok then
-    vim.notify("toggleterm não carregado; abrindo :terminal lazygit", vim.log.levels.WARN)
-    vim.cmd("botright 15split | term lazygit")
-    return
-  end
+	local ok, term = pcall(require, "toggleterm.terminal")
+	if not ok then
+		vim.notify("toggleterm não carregado; abrindo :terminal lazygit", vim.log.levels.WARN)
+		vim.cmd("botright 15split | term lazygit")
+		return
+	end
 
-  if not _G.__LG then
-    _G.__LG = Terminal:new({
-      cmd = "lazygit",
-      direction = "float",
-      hidden = true,
-    })
-  end
+	if not _G.__LG then
+    local Terminal = require("toggleterm.terminal").Terminal
+		_G.__LG = Terminal:new({
+			cmd = "lazygit",
+			direction = "float",
+			hidden = true,
+		})
+	end
   _G.__LG:toggle()
 end, opts)
 
@@ -33,6 +32,7 @@ map("n", "<leader>ff", ":Telescope find_files<CR>", opts)
 map("n", "<leader>fg", ":Telescope live_grep<CR>", opts)
 map("n", "<leader>fb", ":Telescope buffers<CR>", opts)
 map("n", "<leader>fh", ":Telescope help_tags<CR>", opts)
+
 map("t", "<Esc>", [[<C-\><C-n>]], opts)
 
 map("n", "gd", vim.lsp.buf.definition, opts)
@@ -46,7 +46,7 @@ map("n", "]d", vim.diagnostic.goto_next, opts)
 map("n", "<leader>dl", "<cmd>Telescope diagnostic<CR>", opts)
 
 map({ "n", "v" }, "<leader>f", function()
-  require("conform").format({ lsp_fallback = true, async = false })
+	require("conform").format({ lsp_fallback = true, async = false })
 end, opts)
 
 map("n", "<leader>ce", "<cmd>Copilot enable<CR>", { desc = "Copilot: enable", silent = true })
@@ -57,3 +57,4 @@ map("n", "<leader>tt", ":ToggleTerm<CR>", otps)
 map("n", "<leader>xx", "<cmd>TroubleToggle<CR>", opts)
 map("n", "<leader>xt", "<cmd>TodoTrouble<CR>", opts)
 map("n", "<leader>tp", "<cmd>Telescope projects<CR>", opts)
+
